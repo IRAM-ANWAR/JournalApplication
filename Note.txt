@@ -1,0 +1,4 @@
+Jar runs directly, war needs to be deployed on web server
+Context Path-The context path is a prefix to the URL path used to identify and differentiate between different context(s). In Spring Boot, by default, the applications are accessed by context path “/”. That means we can access the application directly at http://localhost:PORT/. For example http://localhost:8080/
+Maven - manage dependency, Build automation tool
+maven install or maven wrapper - .mvn folder
