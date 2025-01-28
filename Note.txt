@@ -2,3 +2,31 @@ Jar runs directly, war needs to be deployed on web server
 Context Path-The context path is a prefix to the URL path used to identify and differentiate between different context(s). In Spring Boot, by default, the applications are accessed by context path “/”. That means we can access the application directly at http://localhost:PORT/. For example http://localhost:8080/
 Maven - manage dependency, Build automation tool
 maven install or maven wrapper - .mvn folder
+
+Object creation -> Externalize
+ApplicationContext is a way to achieve IOC -> Scan(@Component)
+Bean- Object
+Rest API- Representational State Transfer Application Programming Interface- Http Verb+ URL
+
+MongoDB - net start mongodb, net stop mongodb->  mongodb://localhost:27017( in shell)
+collection(table)-> fields(columns)->document(rows)
+use school -> will create this collection
+show collections /  db.students.insertOne({"name":"Ram","age":20})  /  db.students.find().pretty()/ db.students.find({"name":"Ram","age":20})
+
+ORM- technique to map java objects to database tables
+Java Persistence API - set of rules,way to achieve ORM, includes interfaces and annotations that is used in Java classes, requires a persistence provider(ORM tools) for implementation.
+ORM tools- specific implementation of JPA specification, Eh, Hibernate, EclipseLink and OpenJPA. These providers implement the JPA interfaces and provide the
+underlying functionality to interact with database.
+
+Spring Data JPA-  built on top of JPA, is not a JPA implementation. It simplifies working with JPA by providing higher level abstractions and utilities.
+However, to use Spring Data JPA, still need a JPA implementation to handle actual the actual database interaction.
+JPA not used with MongoDB. Spring Data MongoDB -persistence provider for MongoDB. It provides the necessary abstractions and implementations.
+Query Method DSL and Criteria API are two ways to interact
+
+Lombok- during compilation based on annotations
+
+@EnableTransactionManagement - find method annotated with @Transactional and make transactional context(atomicity/container)
+PlatformTransactionManager - MongoTransactionManager is implementation
+
+SpringSecurity - authentication(who can access) and authorization(what access) - uses Http Basic Authentication
+Authorization header: Basic <encoded-string>
