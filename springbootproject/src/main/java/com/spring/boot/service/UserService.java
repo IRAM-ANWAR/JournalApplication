@@ -34,14 +34,28 @@ public class UserService {
 		return this.userRepository.deleteByUserName(user.getUserName()) == null == false;
 	}
 
+	public List<User> getAllUsers() {
+		// Authentication authentication =
+		// SecurityContextHolder.getContext().getAuthentication();
+		// String userName = authentication.getName();
+		return this.userRepository.findAll();
+	}
+
 	public User getByUserName() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String userName = authentication.getName();
 		return this.userRepository.findByUserName(userName).orElse(null);
 	}
 
+	public User saveAdminUser(User user) {
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		user.setRoles(List.of("ADMIN"));
+		return this.userRepository.save(user);
+	}
+
 	public User saveNewUser(User user) {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		user.setRoles(List.of("USER"));
 		return this.userRepository.save(user);
 	}
 
