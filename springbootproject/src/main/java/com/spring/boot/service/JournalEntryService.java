@@ -18,6 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class JournalEntryService {
 
+	// private static final Logger logger =
+	// LoggerFactory.getLogger(JournalEntryService.class);
+
 	@Autowired
 	private JournalEntryRepository journalEntryRepository;
 

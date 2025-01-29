@@ -1,0 +1,331 @@
+https://chatgpt.com/c/6799cbcb-9c80-8005-afea-40df91c6bac3
+Logging Frameworks:-
+Logback: Successor to Log4j, offering better performance, native SLF4J support, and advanced configuration.
+Log4j2: Improved version of Log4j with async logging, garbage-free architecture, and better performance.
+Java Util Logging (JUL): Built-in Java logging framework, less flexible and slower compared to Log4j2 and Logback.
+Spring Boot comes with a default logging configuration that uses Logback as the default logging implementation. It provides balance between simplicity and flexibility.
+@Slf4j & @Log4j2 slf4j->abstraction about logback(simple logging fassade for java)
+
+To convert Logback logging levels to Stackdriver logging levels, you need to map the levels appropriately and use Google Cloud’s LoggingAppender to send logs to Stackdriver. Here's the process:
+
+1. Logback to Stackdriver Logging Level Mapping
+Logback Level	Stackdriver Level
+TRACE	DEBUG
+DEBUG	DEBUG
+INFO	INFO
+WARN	WARNING
+ERROR	ERROR
+Stackdriver does not have a direct TRACE level, so it maps to DEBUG.
+
+2. Configure Logback to Use Stackdriver
+a) Add Dependencies
+If you're using Spring Boot, add the Google Cloud Logging dependency in pom.xml:
+
+xml
+Copy
+Edit
+<dependency>
+    <groupId>com.google.cloud</groupId>
+    <artifactId>google-cloud-logging-logback</artifactId>
+    <version>0.134.1-alpha</version> <!-- Check for the latest version -->
+</dependency>
+b) Configure logback.xml
+Modify logback.xml to use LoggingAppender:
+
+xml
+
+<configuration>
+    <appender name="CLOUD" class="com.google.cloud.logging.logback.LoggingAppender">
+        <log>ROOT</log>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="CLOUD"/>
+    </root>
+</configuration>
+3. Customizing Log Level Mapping (If Needed)
+If you need custom mapping of Logback levels to Stackdriver levels, you can implement a custom appender that overrides the default mapping.
+
+
+ch.qos.logback is the base package for Logback, a widely used logging framework in Java. It provides flexible and high-performance logging capabilities.
+
+What ch.qos.logback Does:
+Core Logging Functionality
+
+Defines logging levels (TRACE, DEBUG, INFO, WARN, ERROR).
+Manages log messages and their formatting.
+Provides efficient asynchronous logging.
+Configuration & Extensions
+
+Supports XML (logback.xml) and Groovy configuration (logback.groovy).
+Allows dynamic configuration changes without restarting the application.
+Appenders (Log Destinations)
+
+Supports multiple output destinations like console, files, databases, and cloud services (e.g., Stackdriver, ELK).
+Example: ConsoleAppender, FileAppender, RollingFileAppender.
+Integration with SLF4J
+
+Logback is the default implementation of SLF4J (Simple Logging Facade for Java).
+Works seamlessly with frameworks like Spring Boot, Hibernate, and Kafka.
+Filters & Encoders
+
+Supports log filters to control which logs get processed.
+Allows customization of log formats using encoders (e.g., JSON, PatternLayout).
+
+
+Logback Configuration (logback.xml) with Best Practices
+Here’s a well-structured logback.xml file with console, file, and rolling file appenders, along with best practices.
+
+1. Best Practices for Logback
+✅ Use Async Logging: Improves performance by logging in a separate thread.
+✅ Use Rolling Files: Prevents log files from growing indefinitely.
+✅ Define Different Log Levels for Different Packages: Helps filter logs efficiently.
+✅ Use JSON Layout for Cloud Logging (Optional): Useful for structured logs in GCP, ELK, etc.
+
+2. Example: Optimized logback.xml
+xml
+Copy
+Edit
+<configuration>
+    <!-- Define log file path (change as needed) -->
+    <property name="LOG_PATH" value="./logs" />
+    
+    <!-- Console Appender (For development) -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- File Appender (Writes logs to a file) -->
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${LOG_PATH}/application.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Rolling File Appender (Automatically rotates logs) -->
+    <appender name="ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/app.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- Daily rolling logs with a max history of 30 days -->
+            <fileNamePattern>${LOG_PATH}/app-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>  <!-- Optional: Limit total log size -->
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Async Appender (For better performance) -->
+    <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>5000</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+        <appender-ref ref="ROLLING_FILE" />
+    </appender>
+
+    <!-- Root Logger (Logs everything at INFO level or above) -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="ASYNC" />
+    </root>
+
+    <!-- Fine-grained logging for specific packages -->
+    <logger name="com.example.service" level="DEBUG" />
+    <logger name="org.springframework" level="WARN" />
+</configuration>
+3. Key Features in This Configuration
+✅ Console Appender → Logs output to the console (useful for development).
+✅ File Appender → Writes logs to a file (application.log).
+✅ Rolling File Appender → Archives logs daily and keeps the last 30 days.
+✅ Async Appender → Improves performance by logging asynchronously.
+✅ Fine-grained Log Levels → Logs everything at INFO level globally but allows DEBUG for com.example.service and WARN for org.springframework.
+
+
+Logback Configuration with JSON Logging & Stackdriver Integration
+This setup will:
+✅ Log in JSON format → Useful for cloud platforms like GCP, ELK, and Datadog.
+✅ Integrate with Stackdriver → Sends logs directly to Google Cloud Logging.
+✅ Use Async Logging → Boosts performance by logging in a separate thread.
+✅ Support Rolling Files → Archives logs daily and keeps them for 30 days.
+
+1. Add Dependencies in pom.xml
+If you're using Maven, add these dependencies:
+
+xml
+Copy
+Edit
+<!-- Google Cloud Logging for Logback -->
+<dependency>
+    <groupId>com.google.cloud</groupId>
+    <artifactId>google-cloud-logging-logback</artifactId>
+    <version>0.134.1-alpha</version> <!-- Check for latest version -->
+</dependency>
+
+<!-- Logback JSON Encoder -->
+<dependency>
+    <groupId>net.logstash.logback</groupId>
+    <artifactId>logstash-logback-encoder</artifactId>
+    <version>7.4</version>
+</dependency>
+For Gradle, add this:
+
+gradle
+Copy
+Edit
+implementation 'com.google.cloud:google-cloud-logging-logback:0.134.1-alpha'
+implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
+2. logback.xml with JSON Logging & Stackdriver
+xml
+Copy
+Edit
+<configuration>
+    <!-- Log file path -->
+    <property name="LOG_PATH" value="./logs" />
+
+    <!-- Console Appender (For Local Debugging) -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+    </appender>
+
+    <!-- JSON File Appender (Logs in JSON format) -->
+    <appender name="JSON_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/app.json</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/app-%d{yyyy-MM-dd}.json</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+    </appender>
+
+    <!-- Stackdriver Appender (Sends logs to Google Cloud) -->
+    <appender name="STACKDRIVER" class="com.google.cloud.logging.logback.LoggingAppender">
+        <log>ROOT</log>
+    </appender>
+
+    <!-- Async Appender (For Performance) -->
+    <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>5000</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+        <appender-ref ref="JSON_FILE" />
+    </appender>
+
+    <!-- Root Logger Configuration -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="ASYNC" />
+        <appender-ref ref="STACKDRIVER" />
+    </root>
+
+    <!-- Custom Log Levels for Specific Packages -->
+    <logger name="com.example.service" level="DEBUG" />
+    <logger name="org.springframework" level="WARN" />
+</configuration>
+3. Explanation of Key Features
+✅ JSON Console Logging → Uses LogstashEncoder for structured logs.
+✅ Rolling JSON Logs → Keeps logs in JSON format with daily rotation.
+✅ Stackdriver Integration → Sends logs directly to Google Cloud.
+✅ Async Logging → Improves performance by handling logs in a separate thread.
+✅ Custom Log Levels → DEBUG for com.example.service, WARN for org.springframework.
+
+4. Viewing Logs in Google Cloud
+Deploy your application on GCP.
+Go to Google Cloud Console → Operations → Logging.
+Use resource.type="gce_instance" (or k8s_container, etc., depending on your environment).
+Search for logs using "jsonPayload.message".
+5. Running Locally Without GCP
+If you're testing locally without GCP, you can disable Stackdriver logs:
+
+Comment out <appender-ref ref="STACKDRIVER"/> in <root>.
+
+To define custom fields in JSON format in Logback, you need to use the logstash-logback-encoder library, which allows structured logging with additional fields.
+
+1. Adding Custom Fields in JSON Logs
+Modify the logback.xml configuration to include custom fields.
+
+xml
+Copy
+Edit
+<configuration>
+    <appender name="JSON_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>./logs/app.json</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>./logs/app-%d{yyyy-MM-dd}.json</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <customFields>{"appName": "MyApplication", "environment": "production"}</customFields>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="JSON_FILE" />
+    </root>
+</configuration>
+2. Expected JSON Log Output
+json
+Copy
+Edit
+{
+  "@timestamp": "2025-01-29T10:15:30.000Z",
+  "level": "INFO",
+  "message": "User login successful",
+  "logger_name": "com.example.AuthService",
+  "thread_name": "main",
+  "appName": "MyApplication",
+  "environment": "production"
+}
+3. Adding Dynamic Fields (MDC Context)
+To add dynamic fields per request (e.g., userId, requestId), use MDC (Mapped Diagnostic Context) in Java.
+
+Modify Your Java Code
+java
+Copy
+Edit
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
+
+public class LogExample {
+    private static final Logger logger = LoggerFactory.getLogger(LogExample.class);
+
+    public static void main(String[] args) {
+        MDC.put("userId", "12345");
+        MDC.put("requestId", "req-98765");
+
+        logger.info("User login successful");
+
+        MDC.clear();  // Clean up after logging
+    }
+}
+Modify logback.xml to Include MDC Fields
+xml
+Copy
+Edit
+<encoder class="net.logstash.logback.encoder.LogstashEncoder">
+    <customFields>{"appName": "MyApplication", "environment": "production"}</customFields>
+    <includeMdc>true</includeMdc>
+</encoder>
+4. Expected JSON Output with MDC
+json
+Copy
+Edit
+{
+  "@timestamp": "2025-01-29T10:15:30.000Z",
+  "level": "INFO",
+  "message": "User login successful",
+  "logger_name": "com.example.AuthService",
+  "thread_name": "main",
+  "appName": "MyApplication",
+  "environment": "production",
+  "userId": "12345",
+  "requestId": "req-98765"
+}
+5. Key Features
+✅ Static Custom Fields → customFields for app-wide metadata.
+✅ Dynamic Fields with MDC → userId, requestId, etc., added per request.
+✅ Structured JSON Logging → Easy integration with ELK, Stackdriver, Datadog, etc.
