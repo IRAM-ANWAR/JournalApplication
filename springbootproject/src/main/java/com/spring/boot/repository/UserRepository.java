@@ -12,5 +12,4 @@ public interface UserRepository extends MongoRepository<User, ObjectId> {
 	Long deleteByUserName(String userName);
 
 	Optional<User> findByUserName(String userName);
-
 }

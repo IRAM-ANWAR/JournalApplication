@@ -36,3 +36,5 @@ Classpath- list of jar and libraries and configurations
 src/main/resources - in classpath
 commandline(program arguements)>application.properties>application.yml
 commandline - --server.port=8081
+
+@MockitoBean with @SpringBootTest
