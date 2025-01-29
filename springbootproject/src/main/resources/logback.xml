@@ -28,6 +28,6 @@
 
     <root level="INFO">
         <appender-ref ref="myConsoleAppender"/>
-        <appender-ref ref="ROLLING_FILE"/>
+       <!--<appender-ref ref="ROLLING_FILE"/>-->
     </root>
 </configuration>

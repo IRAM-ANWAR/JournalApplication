@@ -14,14 +14,14 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@Profile("prod")
+@Profile("dev")
 public class SpringSecurity {
 
 	@Autowired
 	private UserDetailsServiceImpl userDetailsService;
 
 	@Bean
-	public DaoAuthenticationProvider authenticationProvider() {
+	DaoAuthenticationProvider authenticationProvider() {
 		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 		authProvider.setUserDetailsService(this.userDetailsService);
 		authProvider.setPasswordEncoder(passwordEncoder());
@@ -29,12 +29,12 @@ public class SpringSecurity {
 	}
 
 	@Bean
-	public PasswordEncoder passwordEncoder() {
+	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		return http
 				.authorizeHttpRequests(request -> request.requestMatchers("/public/**").permitAll()
 						.requestMatchers("/journal/**", "/user/**").authenticated().requestMatchers("/admin/**")

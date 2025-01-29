@@ -40,3 +40,22 @@ commandline - --server.port=8081
 @MockitoBean with @SpringBootTest
 
 Jenkins -UI - To run commands
+
+SonarQube - dependency -> start-> localhost:9000
+
+Microservice vs REST API: Key Differences Explained 🚀
+Feature	          Microservice	                                                                REST API
+Definition	      An independent, small service that performs a specific business function.	    A method of communication between client and server over HTTP using REST principles.
+Scope	          A software architecture style for building applications.	                    A web service design pattern used in APIs.
+Purpose	          Breaks down an application into multiple loosely coupled services.	        Enables communication between different systems over the internet.
+Communication	  Can use REST APIs, gRPC, messaging (Kafka, RabbitMQ), etc.	                Uses HTTP methods like GET, POST, PUT, DELETE.
+State	          Typically stateless, but can be stateful depending on use case.	            Always stateless (each request is independent).
+Deployment	      Each microservice is deployed separately.	                                    REST API is usually part of a microservice or monolithic app.
+Scalability	      Highly scalable (individual services can scale separately).	                Scales based on the architecture it's used in.
+Example	          Netflix’s services for authentication, recommendations, payments.	            GitHub API, Twitter API, Google Maps API.
+🛠 How They Work Together?
+Microservices often expose REST APIs to communicate with other services.
+Example:
+User Service (Microservice) → Exposes REST API for user authentication.
+Order Service (Microservice) → Exposes REST API to create orders.
+💡 Think of REST API as a communication method, while Microservices define how applications are structured.

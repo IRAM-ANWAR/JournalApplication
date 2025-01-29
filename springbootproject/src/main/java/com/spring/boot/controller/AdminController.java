@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.spring.boot.cache.AppCache;
 import com.spring.boot.entity.User;
 import com.spring.boot.service.UserService;
 
@@ -21,12 +22,21 @@ public class AdminController {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	AppCache appCache;
+
 	@PostMapping("/create/admin")
 	public ResponseEntity<?> addAdminUser(@RequestBody User user) {
 		HttpStatus httpStatus = null;
 		User userSaved = this.userService.saveAdminUser(user);
 		httpStatus = userSaved != null ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
 		return new ResponseEntity<>(userSaved, httpStatus);
+	}
+
+	@GetMapping("/clear-app-cache")
+	public ResponseEntity<?> clearAppCache() {
+		this.appCache.init();
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 	@GetMapping("/get/users")
@@ -36,4 +46,5 @@ public class AdminController {
 		httpStatus = users != null && !users.isEmpty() ? HttpStatus.OK : HttpStatus.NOT_FOUND;
 		return new ResponseEntity<>(users, httpStatus);
 	}
+
 }

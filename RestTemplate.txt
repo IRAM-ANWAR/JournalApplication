@@ -1,0 +1,64 @@
+RestTemplate restTemplate = new RestTemplate();
+It internally uses:
+
+Default HTTP Client: SimpleClientHttpRequestFactory
+Default Timeout: No timeout set (infinite wait)
+Default Message Converters: Supports JSON, XML, String, and other formats
+2️⃣ Default HTTP Client (SimpleClientHttpRequestFactory)
+By default, RestTemplate uses SimpleClientHttpRequestFactory, which:
+
+Uses Java's built-in HttpURLConnection.
+Does not support connection pooling.
+Has no timeout set (infinite wait).
+Does not support PATCH requests (unless overridden manually).
+3️⃣ Default Message Converters
+RestTemplate automatically registers multiple HttpMessageConverters:
+
+Converter	Supports
+StringHttpMessageConverter	Plain Text (text/plain)
+FormHttpMessageConverter	Form Data (application/x-www-form-urlencoded)
+MappingJackson2HttpMessageConverter	JSON (application/json) (if Jackson is on the classpath)
+Jaxb2RootElementHttpMessageConverter	XML (application/xml) (if JAXB is available)
+ByteArrayHttpMessageConverter	Byte Arrays
+ResourceHttpMessageConverter	File/Resource Handling
+4️⃣ How to Configure RestTemplate?
+Since the default SimpleClientHttpRequestFactory has limitations, it’s common to customize RestTemplate by using HttpClient or OkHttpClient.
+
+Example: Custom RestTemplate Bean with Timeouts & Connection Pooling
+
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class RestTemplateConfig {
+
+    @Bean
+    public RestTemplate restTemplate() {
+        CloseableHttpClient httpClient = HttpClients.custom()
+                .setMaxConnTotal(50) // Max 50 connections
+                .setMaxConnPerRoute(10) // Max 10 per route
+                .build();
+
+        HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
+        factory.setConnectTimeout(5000); // 5 seconds
+        factory.setReadTimeout(5000);    // 5 seconds
+
+        return new RestTemplate(factory);
+    }
+}
+5️⃣ Default vs Custom Configuration
+Feature	Default (SimpleClientHttpRequestFactory)	Custom (HttpClient or OkHttpClient)
+HTTP Client	HttpURLConnection	HttpClient or OkHttpClient
+Connection Pooling	❌ No	✅ Yes
+Timeout	❌ Infinite	✅ Configurable
+PATCH Support	❌ No	✅ Yes
+6️⃣ Summary
+Default RestTemplate uses SimpleClientHttpRequestFactory (no pooling, no timeout).
+Default RestTemplate supports JSON, XML, String, and Form data.
+For production, customize RestTemplate with timeouts and connection pooling using HttpClient or OkHttpClient.
+
+RequestEntity -> HttpEntity
