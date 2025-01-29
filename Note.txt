@@ -73,3 +73,4 @@ sudo service redis-server start
 redis-cli
 
 RedisConnectionFactory- manage connection with redis server
+Redis Cloud - go to redis cloud-> get public url and trigger from wsl

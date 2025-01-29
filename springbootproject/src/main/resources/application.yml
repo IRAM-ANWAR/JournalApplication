@@ -3,19 +3,23 @@ spring:
    name: springbootproject
   data:
    redis:
-      host: localhost
-      port: 6379
+      host: redis-18048.c330.asia-south1-1.gce.redns.redis-cloud.com
+      port: 18048
+      username: --------------------
+      password: --------------------
+      #host: localhost
+      #port: 6379
    mongodb:
-      uri: mongodb+srv://<db_userName>:<db_password>N@cluster0.e70bq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      uri: -----------------
       database: journaldb
       auto-index-creation: true
   mail:
    host: smtp.gmail.com
    port: 587
-   username: -----------
-   password: -------------
-   to: ---------------
-   cc: --------------------
+   username: ---------
+   password: ------------
+   to: -------------
+   cc: ---------------
    properties:
       mail:
        smtp:
