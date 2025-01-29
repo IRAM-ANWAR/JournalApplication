@@ -9,6 +9,8 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -16,6 +18,8 @@ import lombok.NonNull;
 @Data
 @NoArgsConstructor
 @Document(collection = "users")
+@Builder
+@AllArgsConstructor
 public class User {
 	@NonNull
 	@Indexed(unique = true)

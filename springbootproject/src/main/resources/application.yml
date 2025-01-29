@@ -1,0 +1,11 @@
+spring:
+  application:
+   name: springbootproject
+  data:
+   mongodb:
+      uri: mongodb+srv://<db_userName>:<db_password>@cluster0.e70bq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      database: journaldb
+      auto-index-creation: true
+server:
+  port: 8080
+

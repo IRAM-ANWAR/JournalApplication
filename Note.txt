@@ -30,3 +30,9 @@ PlatformTransactionManager - MongoTransactionManager is implementation
 
 SpringSecurity - authentication(who can access) and authorization(what access) - uses Http Basic Authentication
 Authorization header: Basic <encoded-string>
+
+Properties:-
+Classpath- list of jar and libraries and configurations
+src/main/resources - in classpath
+commandline(program arguements)>application.properties>application.yml
+commandline - --server.port=8081
