@@ -28,6 +28,8 @@ public class User {
 	private String password;
 	@Id
 	private ObjectId id;
+	private String email;
+	private boolean sentimentAnalysis;
 	@DBRef
 	private List<JournalEntry> journalEntries = new ArrayList<>();
 	@Builder.Default
