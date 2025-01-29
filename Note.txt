@@ -59,3 +59,17 @@ Example:
 User Service (Microservice) → Exposes REST API for user authentication.
 Order Service (Microservice) → Exposes REST API to create orders.
 💡 Think of REST API as a communication method, while Microservices define how applications are structured.
+
+REDIS- In memory cache
+Redis in local- not supported on windows-> wsl --install(in powershell)(windows subsystem for linux)
+
+curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list
+sudo apt-get update
+sudo apt-get install redis
+
+sudo service redis-server start
+
+redis-cli
+
+RedisConnectionFactory- manage connection with redis server

@@ -2,10 +2,30 @@ spring:
   application:
    name: springbootproject
   data:
+   redis:
+      host: localhost
+      port: 6379
    mongodb:
-      uri: mongodb+srv://iram09999anwar:hCKtuzsMhT2kATjN@cluster0.e70bq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      uri: mongodb+srv://<db_userName>:<db_password>N@cluster0.e70bq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
       database: journaldb
       auto-index-creation: true
+  mail:
+   host: smtp.gmail.com
+   port: 587
+   username: -----------
+   password: -------------
+   to: ---------------
+   cc: --------------------
+   properties:
+      mail:
+       smtp:
+        auth: true
+        starttls:
+         enable: true
+   
 server:
   port: 8080
+api:
+ weather:
+  key: --------------------
 

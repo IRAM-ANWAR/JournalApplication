@@ -22,13 +22,21 @@ public class WeatherService {
 	AppCache appCacheImpl;
 
 	@Autowired
+	RedisService redisService;
+
+	@Autowired
 	private RestTemplate restTemplate;
 
 	public WeatherResponse getWeather(String city) {
+
+		WeatherResponse weatherResponse = this.redisService.get("weather_of_" + city, WeatherResponse.class);
+		if (weatherResponse != null)
+			return weatherResponse;
 		String finalAPI = this.appCacheImpl.appCache.get(AppCache.Keys.weather_api.toString()).replace("<CITY>", city)
-				.replace("<API_KEY>", this.apiKey);
+		        .replace("<API_KEY>", this.apiKey);
 		ResponseEntity<WeatherResponse> response = this.restTemplate.exchange(finalAPI, HttpMethod.GET, null,
-				WeatherResponse.class);// deserialize"
+		        WeatherResponse.class);// deserialize"
+		this.redisService.set("weather_of_" + city, response.getBody(), 300L);
 		return response.getBody();
 	}
 }

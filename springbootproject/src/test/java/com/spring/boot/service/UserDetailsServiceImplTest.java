@@ -15,7 +15,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.spring.boot.entity.User;
 import com.spring.boot.repository.UserRepository;
-import com.spring.boot.security.UserDetailsServiceImpl;
 
 public class UserDetailsServiceImplTest {
 

@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.MongoTransactionManager;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.client.RestTemplate;
@@ -21,13 +22,14 @@ import lombok.extern.slf4j.Slf4j;
 
 @SpringBootApplication
 @EnableTransactionManagement
+@EnableScheduling
 @Slf4j
 // @Configuration(bean in that class), @EnableAutoConfiguration, @ComponentScan
 public class SpringbootprojectApplication {
 
 	public static void main(String[] args) {
 		ConfigurableApplicationContext aonfigurableApplicationContext = SpringApplication
-				.run(SpringbootprojectApplication.class, args);
+		        .run(SpringbootprojectApplication.class, args);
 		log.info(List.of(aonfigurableApplicationContext.getEnvironment().getActiveProfiles()).toString());
 
 	}
@@ -48,7 +50,7 @@ public class SpringbootprojectApplication {
 	@ConditionalOnProperty(value = "custom-http-pooling", havingValue = "true", matchIfMissing = false)
 	RestTemplate restTemplate() {
 		CloseableHttpClient httpClient = HttpClients.custom().setConnectionManager(configureConnectionManager())
-				.build();
+		        .build();
 		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
 		factory.setConnectTimeout(5000); // 5 seconds
 		factory.setReadTimeout(5000); // 5 seconds

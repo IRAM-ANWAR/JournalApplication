@@ -12,8 +12,7 @@ public class EmailServiceTest {
 
 	@Test
 	public void testSendEmail() {
-		this.emailService.sendEmail("###########", "#################", "Testing Mail from Spring Boot",
-		        "------------------------------------------------------------------------------------------");
+		this.emailService.sendEmail(null, "Testing Mail from Spring Boot", "KA RE");
 	}
 
 }

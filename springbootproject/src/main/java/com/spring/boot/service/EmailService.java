@@ -1,6 +1,7 @@
 package com.spring.boot.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -14,13 +15,22 @@ public class EmailService {
 	@Autowired
 	private JavaMailSender javaMailSender;
 
-	public void sendEmail(String to, String cc, String subject, String body) {
+	@Value("${spring.mail.to}")
+	String toMail;
+
+	@Value("${spring.mail.cc}")
+	String ccMail;
+
+	public void sendEmail(String to, String subject, String body) {
 		try {
 			SimpleMailMessage mail = new SimpleMailMessage();
 			mail.setText(body);
-			mail.setTo(to);
+			if (to == null)
+				mail.setTo(this.toMail);
+			else
+				mail.setTo(to);
 			mail.setSubject(subject);
-			mail.setCc(cc);
+			mail.setCc(this.ccMail);
 			this.javaMailSender.send(mail);
 		} catch (Exception e) {
 			log.error("Exception in sending email", e);
