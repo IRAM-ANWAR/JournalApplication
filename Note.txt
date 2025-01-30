@@ -74,3 +74,32 @@ redis-cli
 
 RedisConnectionFactory- manage connection with redis server
 Redis Cloud - go to redis cloud-> get public url and trigger from wsl
+
+JWT:-JSON WebToken
+JWT is a way to securely transmit information between parties as a JSON object.
+JWT is a compact, URL-safe token that can carry information between parties.(Base64-URL-Encoding)
+string consisting of three parts -> Header,Payload,Signature
+
+Header 2 parts: type of the token and signing algorithm, such as RSA or HMAC SHA256
+{
+  "alg": "HS256",
+  "typ": "JWT"
+}
+
+Payload contains the claims.Claims are statements about an entity(typically,the user) and additional metadata.
+{
+  "sub": "1234567890",
+  "name": "John Doe",
+  "iat": 1516239022
+}
+
+Signature- used to verify that the sender of the JWT is who it says and to ensure that the message wasn't changed along the way.
+To create the signature part, you have to take the encoded payload, a secret, the alogorithm specified in the header, and sign that.
+HMACSHA256(
+  base64UrlEncode(header) + "." +
+  base64UrlEncode(payload),
+  
+your-256-bit-secret
+
+) secret base64 encoded
+

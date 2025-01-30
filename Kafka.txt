@@ -1,0 +1,57 @@
+Open source distributed event streaming platform(constantly generating events)
+Kafka Cluster- Group of Kafka Broker(server on which kafka is running)
+Kafka Producer- writes new data into kafka cluster
+Kafka Consumer- reads data from kafka producer
+Zookeeper- keeps track of kafka cluster health
+Kafka connect- can bring data from external entity(db,file.....) without writing code- declarative integration - source and sink
+kafka stream - functionalities used in data transformation
+
+INSTALLATION COMMANDS
+zookeeper-server-start.bat ..\..\config\zookeeper.properties
+kafka-server-start.bat ..\..\config\server.properties
+kafka-topics.bat --create --topic my-topic --bootstrap-server localhost:9092 --replication-factor 1 --partitions 3
+kafka-console-producer.bat --broker-list localhost:9092 --topic my-topic
+kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic my-topic --from-beginning
+
+Kafka Topic- named container for similar events. Unique identifier- Name of the topic(like tables)- topic has partitions(data goes in round robin fashion) 
+Consumer poll continously for new mwssages using the topic name.
+Partition - A topic is partitioned and sitributes to kafka brokers in round robbin fashion to achieve distributed system
+Replication factor- A partition is replicated by this factor and it is replicated in another broker to prevent fault.
+
+Partitions- When creating topic- number of partitions need to be specified. - independent of each other
+Each partition is an ordered, immutatble sequence of records.
+Each message has increemental id(offset value)
+partition continously grows(offset increses) -> all records exist in distributed log file
+
+Message key is optional and guarantee ordering
+
+Consumer Offset - Position of a consumer in a specific partition of a topic(it represents the latest message that consumer has read)
+When a consumer group reads messages from a topic, each member of the group maintains its own offset and updates it as it consumes messages
+
+by default topic - __consumer_offset(built in topic that keeps track of latest offset committedd for each partition of each consumer group.
+Topic is internal. Offset information is stored in the topic and updated by Kafka broker to reflect the position of each consumer in the each partition.
+Information from  __consumer_offset is used by kafka to maintain the realibility of consumers group and to ensure that messages are not lost or duplicated
+
+seperate topic created for each consumer group. This topic isused to store the current offset of each consumer in each partition for a given consumer group. 
+each consumer in the group updates its own offset for the partitions it is assigned in the topic, and the group coordinator uses this information to manage the 
+assignment of partitionsto consumers and to ensure that each partition is being consumed by exactly one consumer in the group.
+
+When a consumer joins a consumer group, it sends  join request.
+
+ SENDING MESSAGES COMMANDS
+zookeeper-server-start.bat ..\..\config\zookeeper.properties
+kafka-server-start.bat ..\..\config\server.properties
+kafka-topics.bat --create --topic foods --bootstrap-server localhost:9092 --replication-factor 1 --partitions 4
+kafka-console-producer.bat --broker-list localhost:9092 --topic foods --property "key.separator=-" --property "parse.key=true"
+kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic foods --from-beginning -property "key.separator=-" --property "print.key=false"
+
+Each partitions -> set of messages(segment)- segment size can be defined
+Commit LOG (server.properties -> tmp/kafka-logs-> files.log, these are commit logs where data is stored)
+
+Rentention policy - size based or time based(log cleaner process)- default 7 days(by default time based)
+
+kafka broker -> (kafka-server-start.bat ..\..\config\server.properties)
+kafka-topics.bat --create --topic my-topic --bootstrap-server localhost:9092 --replication-factor 1 --partitions 3(replication factor gives fault tolerance)
+kafka-console-producer.bat --broker-list localhost:9092 --topic my-topic
+kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic my-topic --from-beginning
+
