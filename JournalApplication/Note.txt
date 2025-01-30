@@ -103,3 +103,10 @@ your-256-bit-secret
 
 ) secret base64 encoded
 
+
+Heroku -
+Installed Git
+Created account on Heroku
+Installed Heroku CLI
+heroku login
+heroku create
