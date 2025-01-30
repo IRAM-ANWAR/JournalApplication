@@ -110,3 +110,5 @@ Created account on Heroku
 Installed Heroku CLI
 heroku login
 heroku create
+git push heroku main
+heroku config:set SERVER_PORT=8081
