@@ -11,7 +11,7 @@
 	<groupId>com.spring</groupId>
 	<artifactId>boot</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>springbootproject</name>
+	<name>JournalApplication</name>
 	<description>project for Spring Boot</description>
 	<url/>
 	<licenses>
