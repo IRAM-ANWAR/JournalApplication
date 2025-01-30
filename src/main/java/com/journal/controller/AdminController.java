@@ -25,7 +25,7 @@ public class AdminController {
 	@Autowired
 	AppCache appCache;
 
-	@PostMapping("/create/admin")
+	@PostMapping("/create/adminuser")
 	public ResponseEntity<?> addAdminUser(@RequestBody User user) {
 		HttpStatus httpStatus = null;
 		User userSaved = this.userService.saveAdminUser(user);
