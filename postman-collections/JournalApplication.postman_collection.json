@@ -13,16 +13,11 @@
 					"name": "CreateJournal",
 					"request": {
 						"auth": {
-							"type": "basic",
-							"basic": [
+							"type": "bearer",
+							"bearer": [
 								{
-									"key": "password",
-									"value": "{{password}}",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "{{username}}",
+									"key": "token",
+									"value": "{{jwtToken}}",
 									"type": "string"
 								}
 							]
@@ -31,7 +26,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\":9,\r\n    \"title\":\"jkkkkkkkkkk\",\r\n    \"content\":\"JKL\"\r\n}",
+							"raw": "{\r\n    \"title\":\"jkkkkkkkkkk\",\r\n    \"content\":\"JKL\",\r\n    \"sentiment\":\"SAD\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -39,12 +34,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/journal",
-							"protocol": "http",
+							"raw": "{{host}}/journal",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
-							"port": "8080",
 							"path": [
 								"journal"
 							]
@@ -91,16 +84,11 @@
 					"name": "GetJournalById",
 					"request": {
 						"auth": {
-							"type": "basic",
-							"basic": [
+							"type": "bearer",
+							"bearer": [
 								{
-									"key": "password",
-									"value": "{{password}}",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "{{username}}",
+									"key": "token",
+									"value": "{{jwtToken}}",
 									"type": "string"
 								}
 							]
@@ -108,12 +96,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/journal/get/6",
-							"protocol": "http",
+							"raw": "{{host}}/journal/get/6",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
-							"port": "8080",
 							"path": [
 								"journal",
 								"get",
@@ -127,16 +113,11 @@
 					"name": "DeleteJournalById",
 					"request": {
 						"auth": {
-							"type": "basic",
-							"basic": [
+							"type": "bearer",
+							"bearer": [
 								{
-									"key": "password",
-									"value": "{{password}}",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "{{username}}",
+									"key": "token",
+									"value": "{{jwtToken}}",
 									"type": "string"
 								}
 							]
@@ -144,12 +125,10 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/journal/delete/1",
-							"protocol": "http",
+							"raw": "{{host}}/journal/delete/1",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
-							"port": "8080",
 							"path": [
 								"journal",
 								"delete",
@@ -163,16 +142,11 @@
 					"name": "UpdateById",
 					"request": {
 						"auth": {
-							"type": "basic",
-							"basic": [
+							"type": "bearer",
+							"bearer": [
 								{
-									"key": "password",
-									"value": "{{password}}",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "{{username}}",
+									"key": "token",
+									"value": "{{jwtToken}}",
 									"type": "string"
 								}
 							]
@@ -189,12 +163,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/journal/update/3",
-							"protocol": "http",
+							"raw": "{{host}}/journal/update/3",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
-							"port": "8080",
 							"path": [
 								"journal",
 								"update",
@@ -232,13 +204,13 @@
 			"name": "User",
 			"item": [
 				{
-					"name": "CreateUser",
+					"name": "SignUp",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"userName\":\"Iram\",\r\n    \"password\":\"Iram\",\r\n    \"roles\":[\"USER\"]\r\n}",
+							"raw": "{\r\n    \"userName\":\"Arjun\",\r\n    \"password\":\"Arjun\",\r\n    \"email\":\"iram09999anwar@gmail.com\",\r\n    \"sentimentAnalysis\":false\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -246,15 +218,58 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/public/create",
-							"protocol": "http",
+							"raw": "{{host}}/public/sign-up",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
-							"port": "8080",
 							"path": [
 								"public",
-								"create"
+								"sign-up"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jwtToken = pm.response.text(); \r",
+									"\r",
+									"// Set the JWT token as a collection variable\r",
+									"pm.collectionVariables.set(\"jwtToken\", jwtToken);\r",
+									"\r",
+									"// Optionally, log the token to verify\r",
+									"console.log(\"JWT Token set: \" + jwtToken);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userName\":\"Ram\",\r\n    \"password\":\"Ram\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/public/login",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"public",
+								"login"
 							]
 						}
 					},
@@ -264,16 +279,11 @@
 					"name": "GetUser",
 					"request": {
 						"auth": {
-							"type": "basic",
-							"basic": [
+							"type": "bearer",
+							"bearer": [
 								{
-									"key": "password",
-									"value": "Ram",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "Ram",
+									"key": "token",
+									"value": "{{jwtToken}}",
 									"type": "string"
 								}
 							]
@@ -281,12 +291,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/user/get",
-							"protocol": "http",
+							"raw": "https://gentle-dawn-87599-58db4d2f17f4.herokuapp.com/user/get",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"gentle-dawn-87599-58db4d2f17f4",
+								"herokuapp",
+								"com"
 							],
-							"port": "8080",
 							"path": [
 								"user",
 								"get"
@@ -296,19 +307,42 @@
 					"response": []
 				},
 				{
+					"name": "SayHello",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/user/hello",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"user",
+								"hello"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "DeleteUser",
 					"request": {
 						"auth": {
-							"type": "basic",
-							"basic": [
+							"type": "bearer",
+							"bearer": [
 								{
-									"key": "password",
-									"value": "{{password}}",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "{{username}}",
+									"key": "token",
+									"value": "{{jwtToken}}",
 									"type": "string"
 								}
 							]
@@ -316,12 +350,10 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/user/delete",
-							"protocol": "http",
+							"raw": "{{host}}/user/delete",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
-							"port": "8080",
 							"path": [
 								"user",
 								"delete"
@@ -334,16 +366,11 @@
 					"name": "UpdateById",
 					"request": {
 						"auth": {
-							"type": "basic",
-							"basic": [
+							"type": "bearer",
+							"bearer": [
 								{
-									"key": "password",
-									"value": "{{password}}",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "{{username}}",
+									"key": "token",
+									"value": "{{jwtToken}}",
 									"type": "string"
 								}
 							]
@@ -352,7 +379,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"userName\":\"Iram\",\r\n    \"password\":\"Iram\",\r\n    \"roles\":[\"USER\"]\r\n}",
+							"raw": "{\r\n    \"userName\":\"Iram\",\r\n    \"password\":\"Iram\",\r\n    \"roles\":[\"ADMIN\"]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -360,12 +387,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/user/update",
-							"protocol": "http",
+							"raw": "{{host}}/user/update",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
-							"port": "8080",
 							"path": [
 								"user",
 								"update"
@@ -405,16 +430,11 @@
 					"name": "GetAllUsers",
 					"request": {
 						"auth": {
-							"type": "basic",
-							"basic": [
+							"type": "bearer",
+							"bearer": [
 								{
-									"key": "password",
-									"value": "Admin",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "Admin",
+									"key": "token",
+									"value": "{{jwtToken}}",
 									"type": "string"
 								}
 							]
@@ -422,12 +442,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/admin/get/users",
-							"protocol": "http",
+							"raw": "{{host}}/admin/get/users",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
-							"port": "8080",
 							"path": [
 								"admin",
 								"get",
@@ -492,6 +510,15 @@
 		{
 			"key": "password",
 			"value": "Iram"
+		},
+		{
+			"key": "jwtToken",
+			"value": ""
+		},
+		{
+			"key": "host",
+			"value": "https://gentle-dawn-87599-58db4d2f17f4.herokuapp.com",
+			"type": "default"
 		}
 	]
 }
