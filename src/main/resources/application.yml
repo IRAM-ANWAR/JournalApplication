@@ -1,0 +1,48 @@
+spring:
+  application:
+   name: springbootproject
+  data:
+   redis:
+      host: ${REDIS_HOST}
+      port: 18048
+      username: ${REDIS_USERNAME}
+      password: ${REDIS_PASSWORD}
+      #host: localhost
+      #port: 6379
+   mongodb:
+      uri: ${RMONGO_URI}
+      database: journaldb
+      auto-index-creation: true
+  mail:
+   host: smtp.gmail.com
+   port: 587
+   username: ${MAIL_USERNAME}
+   password: ${MAIL_PASSWORD}
+   to: ${MAIL_TO_USERNAME}
+   cc: ${MAIL_CC_USERNAME}
+   properties:
+      mail:
+       smtp:
+        auth: true
+        starttls:
+         enable: true
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVERS}
+    properties:
+      sasl:
+        mechanism: PLAIN
+        jaas.config: >
+          org.apache.kafka.common.security.plain.PlainLoginModule required
+          username='X'
+          password='X';
+      security.protocol: SASL_SSL
+      session.timeout.ms: 45000
+
+client:
+  id: ${KAFKA_CLIENT_ID}
+   
+server:
+  port: 8080
+api:
+ weather:
+  key: ${WEATHER_API_KEY}
