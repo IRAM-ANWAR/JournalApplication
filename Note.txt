@@ -114,3 +114,18 @@ git push heroku main
 heroku config:set SERVER_PORT=8081
 
 Test using Kusho AI
+
+OpenAPI Specification- It defines a standerized format for describing APIs comprehensively
+Swagger- Tool to implement OpenAPI
+Swagger is an open-ssource framework used for designing, building, documenting, and consuming RESTful APIs. It provides a standerized way to describe the structure
+of an API, making it easier for developers to understand, integrate and consume the API.
+Springfox- Java library used to integrate Swagger with Spring Boot Applications. It automatically generates Swagger documentation from your spring controllers
+and models.
+spring-fox-starter
+
+Springdoc OpenAPI - Alternative to springfox.It is designed to generate API documentation from Spring Boot applications
+using the OpenAPI 3 speification, which is latest.
+springdoc-openapi-ui
+https://medium.com/@javedalikhan50/comprehensive-guide-to-openapi-swagger-integration-in-spring-boot-with-spring-security-jwt-edf8c84e7d91
+
+Oauth2

@@ -1,22 +1,20 @@
 package com.journal.service;
 
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 
 @SpringBootTest
-public class RedisTests {
+class RedisTests {
 
 	@Autowired
-	private RedisTemplate redisTemplate;// default serializer and deserializer if not set
+	private RedisTemplate<String, String> redisTemplate;// default serializer and deserializer if not set
 
-	@Disabled
 	@Test
-	void testSendMail() {
+	void testRedisCcahe() {
 		this.redisTemplate.opsForValue().set("email", "email@email.com");
-		Object email = this.redisTemplate.opsForValue().get("email");
-		int a = 1;
+		Assertions.assertNotNull(this.redisTemplate.opsForValue().get("email"));
 	}
 }

@@ -2,7 +2,6 @@ package com.journal.filter;
 
 import java.io.IOException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,12 +20,15 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class JWTFilter extends OncePerRequestFilter {
 	// before spring security basic authentication
-
-	@Autowired
 	private UserDetailsService userDetailsService;
 
-	@Autowired
 	private JWTUtil jwtUtil;
+
+	public JWTFilter(UserDetailsService userDetailsService, JWTUtil jwtUtil) {
+		super();
+		this.userDetailsService = userDetailsService;
+		this.jwtUtil = jwtUtil;
+	}
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -40,7 +42,7 @@ public class JWTFilter extends OncePerRequestFilter {
 		}
 		if (username != null) {
 			UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-			if (this.jwtUtil.validateToken(jwt)) {
+			if (Boolean.TRUE.equals(this.jwtUtil.validateToken(jwt))) {
 				UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, null,
 				        userDetails.getAuthorities());
 				auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

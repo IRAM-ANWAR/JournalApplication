@@ -1,6 +1,5 @@
 package com.journal.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.journal.entity.User;
+import com.journal.dto.UserDto;
 import com.journal.service.UserService;
 import com.journal.util.JWTUtil;
 
@@ -23,30 +22,33 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/public")
 public class PublicController {
 
-	@Autowired
 	private UserService userService;
-	@Autowired
-	AuthenticationManager authenticationManager;
-	@Autowired
+	private AuthenticationManager authenticationManager;
 	private UserDetailsService userDetailsService;
-
-	@Autowired
 	private JWTUtil jwtUtil;
 
+	PublicController(UserService userService, AuthenticationManager authenticationManager,
+	        UserDetailsService userDetailsService, JWTUtil jwtUtil) {
+		this.authenticationManager = authenticationManager;
+		this.userDetailsService = userDetailsService;
+		this.userService = userService;
+		this.jwtUtil = jwtUtil;
+	}
+
 	@PostMapping("/sign-up")
-	public ResponseEntity<?> createEntry(@RequestBody User user) {
+	public ResponseEntity<UserDto> createEntry(@RequestBody UserDto userDto) {
 		HttpStatus httpStatus = null;
-		User userSaved = this.userService.saveNewUser(user);
+		UserDto userSaved = this.userService.saveNewUser(userDto);
 		httpStatus = userSaved != null ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
 		return new ResponseEntity<>(userSaved, httpStatus);
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestBody User user) {
+	public ResponseEntity<String> login(@RequestBody UserDto userDto) {
 		try {
-			this.authenticationManager
-			        .authenticate(new UsernamePasswordAuthenticationToken(user.getUserName(), user.getPassword()));
-			UserDetails userDetails = this.userDetailsService.loadUserByUsername(user.getUserName());
+			this.authenticationManager.authenticate(
+			        new UsernamePasswordAuthenticationToken(userDto.getUserName(), userDto.getPassword()));
+			UserDetails userDetails = this.userDetailsService.loadUserByUsername(userDto.getUserName());
 			String jwt = this.jwtUtil.generateToken(userDetails.getUsername());
 			return new ResponseEntity<>(jwt, HttpStatus.OK);
 		} catch (Exception e) {

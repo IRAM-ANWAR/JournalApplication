@@ -1,9 +1,7 @@
 package com.journal.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -15,7 +13,7 @@ import com.journal.repository.UserRepository;
 
 @SpringBootTest
 @ActiveProfiles("dev")
-public class UserServiceTest {
+class UserServiceTest {
 
 	@Autowired
 	private UserRepository userRepository;
@@ -23,20 +21,15 @@ public class UserServiceTest {
 	@Autowired
 	UserService userService;
 
-	@Disabled
-	public void test(int a, int b, int expected) {
-		assertEquals(expected, a + b);
-	}
-
 	@ParameterizedTest
 	@CsvSource({ "Ram,Iram" })
-	public void testFindByUserName(String userName) {
+	void testFindByUserName(String userName) {
 		assertNotNull(this.userRepository.findByUserName(userName), "Failed for " + userName);
 	}
 
 	@ParameterizedTest
 	@ValueSource(strings = { "Ram", "Iram" })
-	public void testFindByUserName2(String userName) {
+	void testFindByUserName2(String userName) {
 		assertNotNull(this.userRepository.findByUserName(userName), "Failed for " + userName);
 	}
 

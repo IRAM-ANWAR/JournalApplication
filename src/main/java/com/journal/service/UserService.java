@@ -2,7 +2,6 @@ package com.journal.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -10,35 +9,37 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.journal.dto.UserDto;
 import com.journal.entity.JournalEntry;
 import com.journal.entity.User;
 import com.journal.repository.JournalEntryRepository;
 import com.journal.repository.UserRepository;
+import com.journal.util.GenericMapperUtil;
 
 @Component
 public class UserService {
 
 	private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-	@Autowired
 	private UserRepository userRepository;
 
-	@Autowired
 	private JournalEntryRepository journalEntryRepository;
+
+	UserService(UserRepository userRepository, JournalEntryRepository journalEntryRepository) {
+		this.journalEntryRepository = journalEntryRepository;
+		this.userRepository = userRepository;
+	}
 
 	@Transactional
 	public boolean deleteByUserName() {
 		User user = getByUserName();
 		List<JournalEntry> journalEntries = user.getJournalEntries();
 		this.journalEntryRepository.deleteAll(journalEntries);
-		return this.userRepository.deleteByUserName(user.getUserName()) == null == false;
+		return this.userRepository.deleteByUserName(user.getUserName()) != null;
 	}
 
-	public List<User> getAllUsers() {
-		// Authentication authentication =
-		// SecurityContextHolder.getContext().getAuthentication();
-		// String userName = authentication.getName();
-		return this.userRepository.findAll();
+	public List<UserDto> getAllUsers() {
+		return GenericMapperUtil.mapListToDto(this.userRepository.findAll(), UserDto.class);
 	}
 
 	public User getByUserName() {
@@ -47,32 +48,34 @@ public class UserService {
 		return this.userRepository.findByUserName(userName).orElse(null);
 	}
 
-	public User saveAdminUser(User user) {
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		user.setRoles(List.of("ADMIN"));
-		return this.userRepository.save(user);
+	public UserDto saveAdminUser(UserDto userDto) {
+		userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+		userDto.setRoles(List.of("ADMIN"));
+		return GenericMapperUtil.mapToDto(this.userRepository.save(GenericMapperUtil.mapToEntity(userDto, User.class)),
+		        UserDto.class);
 	}
 
-	public User saveNewUser(User user) {
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		user.setRoles(List.of("USER"));
-		return this.userRepository.save(user);
+	public UserDto saveNewUser(UserDto userDto) {
+		userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+		userDto.setRoles(List.of("USER"));
+		return GenericMapperUtil.mapToDto(this.userRepository.save(GenericMapperUtil.mapToEntity(userDto, User.class)),
+		        UserDto.class);
 	}
 
 	public User saveUser(User user) {
 		return this.userRepository.save(user);
 	}
 
-	public User updateEntry(User user) {
+	public UserDto updateEntry(UserDto userDto) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String userName = authentication.getName();
 		User userExisting = this.userRepository.findByUserName(userName).orElse(null);
 		if (userExisting != null) {
-			userExisting.setPassword(user.getPassword() != null ? passwordEncoder.encode(user.getPassword())
-					: userExisting.getPassword());
-			userExisting.setJournalEntries(
-					user.getJournalEntries() != null ? user.getJournalEntries() : userExisting.getJournalEntries());
-			return saveUser(userExisting);
+			userExisting.setPassword(userDto.getPassword() != null ? passwordEncoder.encode(userDto.getPassword())
+			        : userExisting.getPassword());
+			userExisting.setJournalEntries(userDto.getJournalEntries() != null ? userDto.getJournalEntries()
+			        : userExisting.getJournalEntries());
+			return GenericMapperUtil.mapToDto(saveUser(userExisting), UserDto.class);
 		}
 		return null;
 	}

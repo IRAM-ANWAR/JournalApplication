@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class UserRepositoryImplTest {
+class UserRepositoryImplTest {
 
 	@Autowired
 	UserRepositoryImpl userRepositoryImpl;
 
 	@Test
-	public void testSaveUser() {
+	void testSaveUser() {
 		Assertions.assertNotNull(this.userRepositoryImpl.getUsersForSA());
 	}
 

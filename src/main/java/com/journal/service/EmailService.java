@@ -1,6 +1,5 @@
 package com.journal.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -12,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EmailService {
 
-	@Autowired
 	private JavaMailSender javaMailSender;
 
 	@Value("${spring.mail.to}")
@@ -21,7 +19,12 @@ public class EmailService {
 	@Value("${spring.mail.cc}")
 	String ccMail;
 
-	public void sendEmail(String to, String subject, String body) {
+	public EmailService(JavaMailSender javaMailSender) {
+		super();
+		this.javaMailSender = javaMailSender;
+	}
+
+	public boolean sendEmail(String to, String subject, String body) {
 		try {
 			SimpleMailMessage mail = new SimpleMailMessage();
 			mail.setText(body);
@@ -32,9 +35,11 @@ public class EmailService {
 			mail.setSubject(subject);
 			mail.setCc(this.ccMail);
 			this.javaMailSender.send(mail);
+			return true;
 		} catch (Exception e) {
 			log.error("Exception in sending email", e);
 		}
+		return false;
 	}
 
 }

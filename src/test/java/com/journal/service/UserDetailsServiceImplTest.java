@@ -16,7 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.journal.entity.User;
 import com.journal.repository.UserRepository;
 
-public class UserDetailsServiceImplTest {
+class UserDetailsServiceImplTest {
 
 	@InjectMocks
 	UserDetailsServiceImpl userDetailsService;
@@ -27,7 +27,7 @@ public class UserDetailsServiceImplTest {
 	@Test
 	void loadUserByUserNameTest() {
 		when(this.userRepository.findByUserName(ArgumentMatchers.anyString()))
-				.thenReturn(Optional.of(User.builder().userName("Iram").password("Iram").build()));
+		        .thenReturn(Optional.of(User.builder().userName("Iram").password("Iram").build()));
 		UserDetails user = this.userDetailsService.loadUserByUsername("Iram");
 		Assertions.assertNotNull(user);
 	}

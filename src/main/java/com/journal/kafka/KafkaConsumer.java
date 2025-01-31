@@ -15,7 +15,6 @@ public class KafkaConsumer {
 	@KafkaListener(id = "myConsumer", topics = "weekly_sentiments", groupId = "springboot-group-1", autoStartup = "false")
 	public void listen(String value, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
 	        @Header(KafkaHeaders.RECEIVED_KEY) String key) {
-		this.logger.info(
-		        String.format("\n\n Consumed event from topic %s: key = %-10s value = %s \n\n", topic, key, value));
+		this.logger.info("\n\n Consumed event from topic {}: key = {} value = {} \n\n", topic, key, value);
 	}
 }

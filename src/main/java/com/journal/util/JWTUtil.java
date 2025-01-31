@@ -14,7 +14,7 @@ import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JWTUtil {
-	private String SECRET_KEY = "TaK+HaV^uvCHEFsEVfypW#7g9^k*Z8$V";
+	private String secretKey = "TaK+HaV^uvCHEFsEVfypW#7g9^k*Z8$V";
 
 	private String createToken(Map<String, Object> claims, String subject) {
 		return Jwts.builder().claims(claims).subject(subject).header().empty().add("typ", "JWT").and()
@@ -42,7 +42,7 @@ public class JWTUtil {
 	}
 
 	private SecretKey getSigningKey() {
-		return Keys.hmacShaKeyFor(this.SECRET_KEY.getBytes());
+		return Keys.hmacShaKeyFor(this.secretKey.getBytes());
 	}
 
 	private Boolean isTokenExpired(String token) {

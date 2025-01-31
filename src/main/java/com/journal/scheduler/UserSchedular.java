@@ -2,12 +2,10 @@ package com.journal.scheduler;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -25,23 +23,28 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UserSchedular {
 
-	@Autowired
 	private UserRepositoryImpl userRepository;
 
-	@Autowired
-	EmailService emailService;
+	private EmailService emailService;
 
-	@Autowired
 	private KafkaTemplate<String, SentimentData> kafkaTemplate;
 
+	public UserSchedular(UserRepositoryImpl userRepository, EmailService emailService,
+	        KafkaTemplate<String, SentimentData> kafkaTemplate) {
+		super();
+		this.userRepository = userRepository;
+		this.emailService = emailService;
+		this.kafkaTemplate = kafkaTemplate;
+	}
+
 	@Scheduled(cron = "0 0 9 ? * SUN")
-	public void fetchUsersAndSendSAMail() {
+	public boolean fetchUsersAndSendSAMail() {
 		List<User> users = this.userRepository.getUsersForSA();
 		users.stream().forEach(user -> {
 			List<Sentiment> sentiments = user.getJournalEntries().stream()
 			        .filter(j -> j.getDate().isAfter(LocalDateTime.now().minus(7, ChronoUnit.DAYS)))
-			        .map(JournalEntry::getSentiment).collect(Collectors.toList());
-			Map<Sentiment, Integer> sentimentCounts = new HashMap<>();
+			        .map(JournalEntry::getSentiment).toList();
+			Map<Sentiment, Integer> sentimentCounts = new EnumMap<>(Sentiment.class);
 			for (Sentiment sentiment : sentiments)
 				if (sentiment != null)
 					sentimentCounts.put(sentiment, sentimentCounts.getOrDefault(sentiment, 0) + 1);
@@ -61,10 +64,12 @@ public class UserSchedular {
 					log.error("Exception ", e);
 					this.emailService.sendEmail(sentimentData.getEmail(), "Sentiment for previous week",
 					        sentimentData.getSentiment());
+					throw e;
 				}
 			}
 
 		});
+		return true;
 	}
 
 }

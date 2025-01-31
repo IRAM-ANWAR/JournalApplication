@@ -12,7 +12,7 @@ public class UserArguementsProvider implements ArgumentsProvider {
 
 	@Override
 	public Stream<? extends Arguments> provideArguments(ExtensionContext context) throws Exception {
-		// TODO Auto-generated method stub
+
 		return Stream.of(Arguments.of(User.builder().userName("GHH").password("Iram").build()),
 
 		        Arguments.of(User.builder().userName("Motu").password("").build()));

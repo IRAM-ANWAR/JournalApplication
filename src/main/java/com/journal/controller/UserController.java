@@ -1,6 +1,5 @@
 package com.journal.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -12,23 +11,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.journal.entity.User;
+import com.journal.dto.UserDto;
 import com.journal.entity.WeatherResponse;
 import com.journal.service.UserService;
 import com.journal.service.WeatherService;
+import com.journal.util.GenericMapperUtil;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
-	@Autowired
 	private UserService userService;
 
-	@Autowired
 	private WeatherService weatherService;
 
+	UserController(UserService userService, WeatherService weatherService) {
+		this.userService = userService;
+		this.weatherService = weatherService;
+	}
+
 	@DeleteMapping("/delete")
-	public ResponseEntity<?> delete() {
+	public ResponseEntity<Boolean> delete() {
 		HttpStatus httpStatus = null;
 		boolean isDeleted = this.userService.deleteByUserName();
 		httpStatus = isDeleted ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
@@ -36,15 +39,15 @@ public class UserController {
 	}
 
 	@GetMapping("/get")
-	public ResponseEntity<?> get() {
+	public ResponseEntity<UserDto> get() {
 		HttpStatus httpStatus = null;
-		User user = this.userService.getByUserName();
+		UserDto user = GenericMapperUtil.mapToDto(this.userService.getByUserName(), UserDto.class);
 		httpStatus = user != null ? HttpStatus.OK : HttpStatus.NOT_FOUND;
 		return new ResponseEntity<>(user, httpStatus);
 	}
 
 	@GetMapping("/hello")
-	public ResponseEntity<?> getHelloMessage() {
+	public ResponseEntity<String> getHelloMessage() {
 		HttpStatus httpStatus = null;
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String userName = authentication.getName();
@@ -57,11 +60,11 @@ public class UserController {
 	}
 
 	@PutMapping("update")
-	public ResponseEntity<?> updateUser(@RequestBody User user) {
+	public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto) {
 		HttpStatus httpStatus = null;
-		User userUpdated = this.userService.updateEntry(user);
+		UserDto userUpdated = this.userService.updateEntry(userDto);
 		httpStatus = userUpdated != null ? HttpStatus.OK : HttpStatus.NOT_FOUND;
-		return new ResponseEntity<>(user, httpStatus);
+		return new ResponseEntity<>(userDto, httpStatus);
 	}
 
 }
