@@ -15,7 +15,7 @@ kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic my-topic --
 
 Kafka Topic- named container for similar events. Unique identifier- Name of the topic(like tables)- topic has partitions(data goes in round robin fashion) 
 Consumer poll continously for new mwssages using the topic name.
-Partition - A topic is partitioned and sitributes to kafka brokers in round robbin fashion to achieve distributed system
+Partition - A topic is partitioned and distributes to kafka brokers in round robbin fashion to achieve distributed system
 Replication factor- A partition is replicated by this factor and it is replicated in another broker to prevent fault.
 
 Partitions- When creating topic- number of partitions need to be specified. - independent of each other
@@ -28,13 +28,13 @@ Message key is optional and guarantee ordering
 Consumer Offset - Position of a consumer in a specific partition of a topic(it represents the latest message that consumer has read)
 When a consumer group reads messages from a topic, each member of the group maintains its own offset and updates it as it consumes messages
 
-by default topic - __consumer_offset(built in topic that keeps track of latest offset committedd for each partition of each consumer group.
+by default topic - __consumer_offset(built in topic that keeps track of latest offset committed for each partition of each consumer group.
 Topic is internal. Offset information is stored in the topic and updated by Kafka broker to reflect the position of each consumer in the each partition.
 Information from  __consumer_offset is used by kafka to maintain the realibility of consumers group and to ensure that messages are not lost or duplicated
 
-seperate topic created for each consumer group. This topic isused to store the current offset of each consumer in each partition for a given consumer group. 
+seperate topic created for each consumer group. This topic issued to store the current offset of each consumer in each partition for a given consumer group. 
 each consumer in the group updates its own offset for the partitions it is assigned in the topic, and the group coordinator uses this information to manage the 
-assignment of partitionsto consumers and to ensure that each partition is being consumed by exactly one consumer in the group.
+assignment of partitions consumers and to ensure that each partition is being consumed by exactly one consumer in the group.
 
 When a consumer joins a consumer group, it sends  join request.
 
